@@ -22,10 +22,23 @@
 #include "internal/evp_int.h"
 
 /* Functions provided by the core */
-static OSSL_core_get_param_types_fn *c_get_param_types = NULL;
-static OSSL_core_get_params_fn *c_get_params = NULL;
-static OSSL_core_put_error_fn *c_put_error = NULL;
-static OSSL_core_add_error_vdata_fn *c_add_error_vdata = NULL;
+static OSSL_core_get_param_types_fn *c_get_param_types;
+static OSSL_core_get_params_fn *c_get_params;
+static void *(*c_CRYPTO_malloc)(size_t num, const char *file, int line);
+static void *(*c_CRYPTO_zalloc)(size_t num, const char *file, int line);
+static void *(*c_CRYPTO_memdup)(const void *str, size_t siz, const char *file, int line);
+static char *(*c_CRYPTO_strdup)(const char *str, const char *file, int line);
+static char *(*c_CRYPTO_strndup)(const char *str, size_t s, const char *file, int line);
+static void (*c_CRYPTO_free)(void *ptr, const char *file, int line);
+static void (*c_CRYPTO_clear_free)(void *ptr, size_t num, const char *file, int line);
+static void *(*c_CRYPTO_realloc)(void *addr, size_t num, const char *file, int line);
+static void *(*c_CRYPTO_clear_realloc)(void *addr, size_t old_num, size_t num, const char *file, int line);
+static void *(*c_CRYPTO_secure_malloc)(size_t num, const char *file, int line);
+static void *(*c_CRYPTO_secure_zalloc)(size_t num, const char *file, int line);
+static void (*c_CRYPTO_secure_free)(void *ptr, const char *file, int line);
+static void (*c_CRYPTO_secure_clear_free)(void *ptr, size_t num, const char *file, int line);
+static int (*c_CRYPTO_secure_malloc_initialized)(void);
+static void (*c_OPENSSL_cleanse)(void *ptr, size_t len);
 
 /* Parameters we provide to the core */
 static const OSSL_ITEM fips_param_types[] = {
@@ -152,8 +165,50 @@ int OSSL_provider_init(const OSSL_PROVIDER *provider,
         case OSSL_FUNC_CORE_ADD_ERROR_VDATA:
             c_add_error_vdata = OSSL_get_core_add_error_vdata(in);
             break;
-        /* Just ignore anything we don't understand */
+        case OSSL_FUNC_CORE_GET_CRYPTO_MALLOC:
+            c_CRYPTO_malloc = OSSL_get_CRYPTO_malloc(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_ZALLOC:
+            c_CRYPTO_zalloc = OSSL_get_CRYPTO_zalloc(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_MEMDUP:
+            c_CRYPTO_memdup = OSSL_get_CRYPTO_memdup(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_STRDUP:
+            c_CRYPTO_strdup = OSSL_get_CRYPTO_strdup(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_STRNDUP:
+            c_CRYPTO_strndup = OSSL_get_CRYPTO_strndup(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_FREE:
+            c_CRYPTO_free = OSSL_get_CRYPTO_free(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_CLEAR_FREE:
+            c_CRYPTO_clear_free = OSSL_get_CRYPTO_clear_free(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_REALLOC:
+            c_CRYPTO_realloc = OSSL_get_CRYPTO_realloc(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_CLEAR_REALLOC:
+            c_CRYPTO_clear_realloc = OSSL_get_CRYPTO_clear_realloc(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_MALLOC:
+            c_CRYPTO_secure_malloc = OSSL_get_CRYPTO_secure_malloc(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_ZALLOC:
+            c_CRYPTO_secure_zalloc = OSSL_get_CRYPTO_secure_zalloc(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_FREE:
+            c_CRYPTO_secure_free = OSSL_get_CRYPTO_secure_free(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_CLEAR_FREE:
+            c_CRYPTO_secure_clear_free = OSSL_get_CRYPTO_secure_clear_free(in);
+            break;
+        case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_MALLOC_INITIALIZED:
+            c_CRYPTO_secure_malloc_initialized = OSSL_get_CRYPTO_secure_malloc_initialized(in);
+            break;
         default:
+            /* Just ignore anything we don't understand */
             break;
         }
     }
@@ -219,4 +274,79 @@ void ERR_add_error_data(int num, ...)
 void ERR_add_error_vdata(int num, va_list args)
 {
     c_add_error_vdata(num, args);
+}
+
+void *CRYPTO_malloc(size_t num, const char *file, int line)
+{
+    return c_CRYPTO_malloc(num, file, line);
+}
+
+void *CRYPTO_zalloc(size_t num, const char *file, int line)
+{
+    return c_CRYPTO_zalloc(num, file, line);
+}
+
+void *CRYPTO_memdup(const void *str, size_t siz, const char *file, int line)
+{
+    return c_CRYPTO_memdup(str, siz, file, line);
+}
+
+char *CRYPTO_strdup(const char *str, const char *file, int line)
+{
+    return c_CRYPTO_strdup(str, file, line);
+}
+
+char *CRYPTO_strndup(const char *str, size_t s, const char *file, int line)
+{
+    return c_CRYPTO_strndup(str, s, file, line);
+}
+
+void CRYPTO_free(void *ptr, const char *file, int line)
+{
+    c_CRYPTO_free(ptr, file, line);
+}
+
+void CRYPTO_clear_free(void *ptr, size_t num, const char *file, int line)
+{
+    c_CRYPTO_clear_free(ptr, num, file, line);
+}
+
+void *CRYPTO_realloc(void *addr, size_t num, const char *file, int line)
+{
+    return c_CRYPTO_realloc(addr, num, file, line);
+}
+
+void *CRYPTO_clear_realloc(void *addr, size_t old_num, size_t num, const char *file, int line)
+{
+    return c_CRYPTO_clear_realloc(addr, old_num, num, file, line);
+}
+
+void *CRYPTO_secure_malloc(size_t num, const char *file, int line)
+{
+    return c_CRYPTO_secure_malloc(num, file, line);
+}
+
+void *CRYPTO_secure_zalloc(size_t num, const char *file, int line)
+{
+    return c_CRYPTO_secure_zalloc(num, file, line);
+}
+
+void CRYPTO_secure_free(void *ptr, const char *file, int line)
+{
+    c_CRYPTO_secure_free(ptr, file, line);
+}
+
+void CRYPTO_secure_clear_free(void *ptr, size_t num, const char *file, int line)
+{
+    c_CRYPTO_secure_clear_free(ptr, num, file, line);
+}
+
+int CRYPTO_secure_malloc_initialized(void)
+{
+    return c_CRYPTO_secure_malloc_initialized();
+}
+
+void OPENSSL_cleanse(void *ptr, size_t len)
+{
+    c_OPENSSL_cleanse(ptr, len);
 }
