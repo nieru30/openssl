@@ -115,7 +115,7 @@ OSSL_CORE_MAKE_FUNC(int,
         CRYPTO_secure_malloc_initialized, (void))
 #define OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE 24
 OSSL_CORE_MAKE_FUNC(void,
-        CRYPTO_cleanse, (void *ptr, size_t len))
+        OPENSSL_cleanse, (void *ptr, size_t len))
 
 /* Functions provided by the provider to the Core, reserved numbers 1024-1535 */
 # define OSSL_FUNC_PROVIDER_TEARDOWN         1024

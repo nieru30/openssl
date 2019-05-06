@@ -24,21 +24,21 @@
 /* Functions provided by the core */
 static OSSL_core_get_param_types_fn *c_get_param_types;
 static OSSL_core_get_params_fn *c_get_params;
-static void *(*c_CRYPTO_malloc)(size_t num, const char *file, int line);
-static void *(*c_CRYPTO_zalloc)(size_t num, const char *file, int line);
-static void *(*c_CRYPTO_memdup)(const void *str, size_t siz, const char *file, int line);
-static char *(*c_CRYPTO_strdup)(const char *str, const char *file, int line);
-static char *(*c_CRYPTO_strndup)(const char *str, size_t s, const char *file, int line);
-static void (*c_CRYPTO_free)(void *ptr, const char *file, int line);
-static void (*c_CRYPTO_clear_free)(void *ptr, size_t num, const char *file, int line);
-static void *(*c_CRYPTO_realloc)(void *addr, size_t num, const char *file, int line);
-static void *(*c_CRYPTO_clear_realloc)(void *addr, size_t old_num, size_t num, const char *file, int line);
-static void *(*c_CRYPTO_secure_malloc)(size_t num, const char *file, int line);
-static void *(*c_CRYPTO_secure_zalloc)(size_t num, const char *file, int line);
-static void (*c_CRYPTO_secure_free)(void *ptr, const char *file, int line);
-static void (*c_CRYPTO_secure_clear_free)(void *ptr, size_t num, const char *file, int line);
-static int (*c_CRYPTO_secure_malloc_initialized)(void);
-static void (*c_OPENSSL_cleanse)(void *ptr, size_t len);
+static OSSL_CRYPTO_malloc_fn *c_CRYPTO_malloc;
+static OSSL_CRYPTO_zalloc_fn *c_CRYPTO_zalloc;
+static OSSL_CRYPTO_memdup_fn *c_CRYPTO_memdup;
+static OSSL_CRYPTO_strdup_fn *c_CRYPTO_strdup;
+static OSSL_CRYPTO_strndup_fn *c_CRYPTO_strndup;
+static OSSL_CRYPTO_free_fn *c_CRYPTO_free;
+static OSSL_CRYPTO_clear_free_fn *c_CRYPTO_clear_free;
+static OSSL_CRYPTO_realloc_fn *c_CRYPTO_realloc;
+static OSSL_CRYPTO_clear_realloc_fn *c_CRYPTO_clear_realloc;
+static OSSL_CRYPTO_secure_malloc_fn *c_CRYPTO_secure_malloc;
+static OSSL_CRYPTO_secure_zalloc_fn *c_CRYPTO_secure_zalloc;
+static OSSL_CRYPTO_secure_free_fn *c_CRYPTO_secure_free;
+static OSSL_CRYPTO_secure_clear_free_fn *c_CRYPTO_secure_clear_free;
+static OSSL_CRYPTO_secure_malloc_initialized_fn *c_CRYPTO_secure_malloc_initialized;
+static OSSL_OPENSSL_cleanse_fn *c_OPENSSL_cleanse;
 
 /* Parameters we provide to the core */
 static const OSSL_ITEM fips_param_types[] = {
