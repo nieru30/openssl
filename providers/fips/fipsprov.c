@@ -207,6 +207,9 @@ int OSSL_provider_init(const OSSL_PROVIDER *provider,
         case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_MALLOC_INITIALIZED:
             c_CRYPTO_secure_malloc_initialized = OSSL_get_CRYPTO_secure_malloc_initialized(in);
             break;
+        case OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE:
+            c_OPENSSL_cleanse = OSSL_get_OPENSSL_cleanse(in);
+            break;
         default:
             /* Just ignore anything we don't understand */
             break;
