@@ -37,7 +37,6 @@ static OSSL_CRYPTO_secure_malloc_fn *c_CRYPTO_secure_malloc;
 static OSSL_CRYPTO_secure_zalloc_fn *c_CRYPTO_secure_zalloc;
 static OSSL_CRYPTO_secure_free_fn *c_CRYPTO_secure_free;
 static OSSL_CRYPTO_secure_clear_free_fn *c_CRYPTO_secure_clear_free;
-static OSSL_CRYPTO_secure_malloc_initialized_fn *c_CRYPTO_secure_malloc_initialized;
 static OSSL_OPENSSL_cleanse_fn *c_OPENSSL_cleanse;
 
 /* Parameters we provide to the core */
@@ -204,9 +203,6 @@ int OSSL_provider_init(const OSSL_PROVIDER *provider,
         case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_CLEAR_FREE:
             c_CRYPTO_secure_clear_free = OSSL_get_CRYPTO_secure_clear_free(in);
             break;
-        case OSSL_FUNC_CORE_GET_CRYPTO_SECURE_MALLOC_INITIALIZED:
-            c_CRYPTO_secure_malloc_initialized = OSSL_get_CRYPTO_secure_malloc_initialized(in);
-            break;
         case OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE:
             c_OPENSSL_cleanse = OSSL_get_OPENSSL_cleanse(in);
             break;
@@ -342,11 +338,6 @@ void CRYPTO_secure_free(void *ptr, const char *file, int line)
 void CRYPTO_secure_clear_free(void *ptr, size_t num, const char *file, int line)
 {
     c_CRYPTO_secure_clear_free(ptr, num, file, line);
-}
-
-int CRYPTO_secure_malloc_initialized(void)
-{
-    return c_CRYPTO_secure_malloc_initialized();
 }
 
 void OPENSSL_cleanse(void *ptr, size_t len)

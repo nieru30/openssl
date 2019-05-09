@@ -110,10 +110,7 @@ OSSL_CORE_MAKE_FUNC(void,
 #define OSSL_FUNC_CORE_GET_CRYPTO_SECURE_CLEAR_FREE 22
 OSSL_CORE_MAKE_FUNC(void,
         CRYPTO_secure_clear_free, (void *ptr, size_t num, const char *file, int line))
-#define OSSL_FUNC_CORE_GET_CRYPTO_SECURE_MALLOC_INITIALIZED 23
-OSSL_CORE_MAKE_FUNC(int,
-        CRYPTO_secure_malloc_initialized, (void))
-#define OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE 24
+#define OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE 23
 OSSL_CORE_MAKE_FUNC(void,
         OPENSSL_cleanse, (void *ptr, size_t len))
 
