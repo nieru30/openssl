@@ -24,6 +24,8 @@
 /* Functions provided by the core */
 static OSSL_core_get_param_types_fn *c_get_param_types;
 static OSSL_core_get_params_fn *c_get_params;
+static OSSL_core_put_error_fn *c_put_error;
+static OSSL_core_add_error_vdata_fn *c_add_error_vdata;
 static OSSL_CRYPTO_malloc_fn *c_CRYPTO_malloc;
 static OSSL_CRYPTO_zalloc_fn *c_CRYPTO_zalloc;
 static OSSL_CRYPTO_memdup_fn *c_CRYPTO_memdup;
@@ -315,7 +317,8 @@ void *CRYPTO_realloc(void *addr, size_t num, const char *file, int line)
     return c_CRYPTO_realloc(addr, num, file, line);
 }
 
-void *CRYPTO_clear_realloc(void *addr, size_t old_num, size_t num, const char *file, int line)
+void *CRYPTO_clear_realloc(void *addr, size_t old_num, size_t num,
+                           const char *file, int line)
 {
     return c_CRYPTO_clear_realloc(addr, old_num, num, file, line);
 }
