@@ -681,8 +681,11 @@ static int core_get_params(const OSSL_PROVIDER *prov, const OSSL_PARAM params[])
 static const OSSL_DISPATCH core_dispatch_[] = {
     { OSSL_FUNC_CORE_GET_PARAM_TYPES, (void (*)(void))core_get_param_types },
     { OSSL_FUNC_CORE_GET_PARAMS, (void (*)(void))core_get_params },
-    { OSSL_FUNC_CORE_PUT_ERROR, (void (*)(void))ERR_put_error },
-    { OSSL_FUNC_CORE_ADD_ERROR_VDATA, (void (*)(void))ERR_add_error_vdata },
+
+    { OSSL_FUNC_CORE_GET_ERR_PUT_ERROR, (void (*)(void)) ERR_put_error },
+    { OSSL_FUNC_CORE_GET_ERR_ADD_ERROR_VDATA,
+        (void (*)(void))ERR_add_error_vdata },
+
     { 0, NULL }
 };
 static const OSSL_DISPATCH *core_dispatch = core_dispatch_;
