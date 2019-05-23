@@ -113,6 +113,9 @@ OSSL_CORE_MAKE_FUNC(void,
 #define OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE 23
 OSSL_CORE_MAKE_FUNC(void,
         OPENSSL_cleanse, (void *ptr, size_t len))
+# define OSSL_FUNC_CORE_GET_OPENSSL_HEXSTR2BUF 24
+OSSL_CORE_MAKE_FUNC(unsigned char *,
+        OPENSSL_hexstr2buf, (const char *str, long *len))
 
 /* Functions provided by the provider to the Core, reserved numbers 1024-1535 */
 # define OSSL_FUNC_PROVIDER_TEARDOWN         1024

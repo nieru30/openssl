@@ -707,6 +707,8 @@ static const OSSL_DISPATCH core_dispatch_[] = {
     { OSSL_FUNC_CORE_GET_CRYPTO_SECURE_CLEAR_FREE,
         (void (*)(void))CRYPTO_secure_clear_free },
     { OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE, (void (*)(void))OPENSSL_cleanse },
+    { OSSL_FUNC_CORE_GET_OPENSSL_HEXSTR2BUF,
+        (void (*)(void))OPENSSL_hexstr2buf },
 
     { 0, NULL }
 };

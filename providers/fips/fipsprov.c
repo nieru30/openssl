@@ -40,6 +40,7 @@ static OSSL_CRYPTO_secure_zalloc_fn *c_CRYPTO_secure_zalloc;
 static OSSL_CRYPTO_secure_free_fn *c_CRYPTO_secure_free;
 static OSSL_CRYPTO_secure_clear_free_fn *c_CRYPTO_secure_clear_free;
 static OSSL_OPENSSL_cleanse_fn *c_OPENSSL_cleanse;
+static OSSL_OPENSSL_hexstr2buf_fn *c_OPENSSL_hexstr2buf;
 
 /* Parameters we provide to the core */
 static const OSSL_ITEM fips_param_types[] = {
@@ -208,6 +209,9 @@ int OSSL_provider_init(const OSSL_PROVIDER *provider,
         case OSSL_FUNC_CORE_GET_OPENSSL_CLEANSE:
             c_OPENSSL_cleanse = OSSL_get_OPENSSL_cleanse(in);
             break;
+        case OSSL_FUNC_CORE_GET_OPENSSL_HEXSTR2BUF:
+            c_OPENSSL_hexstr2buf = OSSL_get_OPENSSL_hexstr2buf(in);
+            break;
         default:
             /* Just ignore anything we don't understand */
             break;
@@ -346,4 +350,9 @@ void CRYPTO_secure_clear_free(void *ptr, size_t num, const char *file, int line)
 void OPENSSL_cleanse(void *ptr, size_t len)
 {
     c_OPENSSL_cleanse(ptr, len);
+}
+
+unsigned char *OPENSSL_hexstr2buf(const char *str, long *len)
+{
+    return c_OPENSSL_hexstr2buf(str, len);
 }
